@@ -1,0 +1,38 @@
+[
+    {
+      "from_unit": "K",
+      "to_unit": "F",
+      "multiplier": 1.8,
+      "offset": -459.49
+    },
+    {
+      "from_unit": "K",
+      "to_unit": "C",
+      "multiplier": 1,
+      "offset": -273.15
+    },
+    {
+      "from_unit": "F",
+      "to_unit": "K",
+      "multiplier": 0.555555,
+      "offset": 255.37222
+    },
+    {
+      "from_unit": "F",
+      "to_unit": "C",
+      "multiplier": 0.555555,
+      "offset": -17.7777
+    },
+    {
+      "from_unit": "C",
+      "to_unit": "F",
+      "multiplier": 1.8,
+      "offset": 32
+    },
+    {
+      "from_unit": "C",
+      "to_unit": "K",
+      "multiplier": 1,
+      "offset": 273.15
+    }
+]
