@@ -15,11 +15,12 @@ import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append("../classes")
 
+
 # -- Project information -----------------------------------------------------
 
-project = 'classes assignment'
-copyright = '2021, saranya'
-author = 'saranya'
+project = 'Classes Assignment'
+copyright = '2021, Saranya S'
+author = 'Saranya S'
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,6 +37,10 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
+
+intersphinx_mapping = {
+  'py': ('https://docs.python.org/3', None),
+}
 
 
 # -- Options for HTML output -------------------------------------------------
