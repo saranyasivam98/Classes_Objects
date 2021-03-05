@@ -16,13 +16,15 @@ LOGGER_CONFIG_PATH = 'config/logging.json'
 
 class UnitConversion:
     """
-    To store the parameters and perform unit conversion 
+    To store the parameters and perform unit conversion
     """
-    def __init__(self, unit_1, unit_2):
+
+    def __init__(self, unit_1, unit_2, conversion_data):
         self.unit_1 = unit_1
         self.unit_2 = unit_2
         self.offset = None
         self.multiplier = None
+        self.conversion_data = conversion_data
         self.find_params()
 
     def find_params(self):
@@ -38,17 +40,16 @@ class UnitConversion:
 
         :return: None
         """
-
-        with open("conv.json") as file:
-            conversions = json.load(file)
-        for conversion in conversions:
+        for conversion in self.conversion_data:
             if conversion["from_unit"] == self.unit_1.unit and conversion["to_unit"] == self.unit_2.unit:
-                print("entered into find_params")
                 self.multiplier = conversion['multiplier']
                 self.offset = conversion['offset']
 
+        if self.unit_1.quantity != self.unit_2.quantity:
+            raise TypeError("The units must be of same quantity")
+
         if self.multiplier is None and self.offset is None:
-            raise NameError("The error conversion is not defined for the mentioned units")
+            raise NameError("The conversion is not defined for the mentioned units")
 
     def is_acceptable(self, value):
         """
@@ -70,51 +71,51 @@ class UnitConversion:
         """
         flag = self.is_acceptable(value)
         if flag:
-            if self.unit_1.quantity == self.unit_2.quantity:
-                if self.unit_2 == self.unit_1:
-                    return value
-                else:
-                    return self.multiplier * value + self.offset
+
+            if self.unit_2 == self.unit_1:
+                return value
             else:
-                raise TypeError("The units must be of same quantity")
+                return self.multiplier * value + self.offset
+
         else:
             raise ValueError("The entered value is lesser the lower limit: %d allowed for the "
                              "unit" % self.unit_1.lower_limit)
 
 
-class Unit:
-    def __init__(self, unit, quantity, lower_limit):
-        """
-        Constructor
-        :param unit: The common representation of the unit
-        :param quantity: The quantity to which the unit belongs
-        :param lower_limit: The least value that the unit can take.
-        """
-        self.unit = unit
-        self.quantity = quantity    # class object
-        self.lower_limit = lower_limit
+class Units(object):
+    def __init__(self, d):
+        self.kelvin = None
+        self.millimeter = None
+        self.centimeter = None
+        self.kilometer = None
+        self.meter = None
+        self.fahrenheit = None
+        self.celsius = None
+        for a, b in d.items():
+            if isinstance(b, (list, tuple)):
+
+                setattr(self, a, [Units(x) if isinstance(x, dict) else x for x in b])
+            else:
+                setattr(self, a, Units(b) if isinstance(b, dict) else b)
+
+    def __repr__(self):
+        return str(self.__dict__)
 
 
 def main():
     """ Main Function"""
-    meter = Unit("m", "Distance", 0)
-    kilometer = Unit("km", "Distance", 0)
-    # kelvin = Unit("K", "Temperature", 0)
 
-    # obj = UnitConversion(meter, kilometer, 0.001, 0)
-    # obj_1 = UnitConversion(kilometer, meter, 1000, 0)
-    # print(obj.convert(6.3594))
+    with open("new_units.json") as file:
+        data = json.load(file)
 
-    with open("units.json") as file:
-        units = json.load(file)
+    with open("conv.json") as file:
+        conversions = json.load(file)
 
-    for unit in units:
-        globals()[unit['name']] = Unit(unit['unit'], unit['quantity'], unit['lower_limit'])
+    units = Units(data)
+    unit_1 = units.kelvin
+    unit_2 = units.millimeter
 
-    unit_1 = kelvin
-    unit_2 = fahrenheit
-
-    test_1 = UnitConversion(unit_1, unit_2)
+    test_1 = UnitConversion(unit_1, unit_2, conversions)
     final_value = test_1.convert(32)
     print(final_value)
 
