@@ -105,7 +105,7 @@ class Units(object):
 def main():
     """ Main Function"""
 
-    with open("new_units.json") as file:
+    with open("units.json") as file:
         data = json.load(file)
 
     with open("conv.json") as file:

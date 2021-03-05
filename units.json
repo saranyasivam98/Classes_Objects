@@ -1,44 +1,42 @@
-[
-  {
-    "name" : "celcius",
+{
+   "celsius":{
     "unit": "C",
     "quantity": "Temperature",
     "lower_limit": -273.15
   },
-  {
-    "name" : "fahrenheit",
-    "unit": "F",
+  "fahrenheit":{
+    "unit": "C",
     "quantity": "Temperature",
     "lower_limit": -459.67
   },
-  {
-    "name" : "kelvin",
+
+ "kelvin": {
     "unit": "K",
     "quantity": "Temperature",
     "lower_limit": 0
   },
-  {
-    "name": "kilometer",
+  "kilometer":{
     "unit" : "km",
     "quantity": "Distance",
     "lower_limit": 0
   },
-  {
-    "name": "meter",
+
+  "meter": {
     "unit" : "m",
     "quantity": "Distance",
     "lower_limit": 0
   },
-  {
-    "name": "millimeter",
+
+  "millimeter":{
     "unit" : "mm",
     "quantity": "Distance",
     "lower_limit": 0
   },
-  {
-    "name": "centimeter",
+
+  "centimeter":{
     "unit" : "cm",
     "quantity": "Distance",
     "lower_limit": 0
   }
-]
+}
+
