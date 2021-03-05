@@ -66,18 +66,16 @@ def main():
     """Main Function"""
     setup_logging()
     obj_1 = Tree('Parent')
-    print(obj_1.name)
 
     children = [Tree("child1"), Tree("child2"), Tree("child3")]
     obj_1.add_children(children)
-    print(obj_1.child[0].parent)
 
     g_child = [Tree("newborn1"), Tree("newborn2")]
     children[0].add_children(g_child)
 
     g_child_1 = [Tree("newbie2")]
     children[1].add_children(g_child_1)
-    print(obj_1)
+    LOGGER.info(obj_1)
 
 
 if __name__ == "__main__":

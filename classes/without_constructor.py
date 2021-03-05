@@ -51,8 +51,8 @@ def main():
     my_dict = json.dumps(my_dict)
 
     obj_1 = json.loads(my_dict, object_hook=lambda val: JsonData(**val))
-    print(obj_1)
-    print(type(obj_1))
+    LOGGER.info(obj_1)
+    LOGGER.info(type(obj_1))
 
 
 if __name__ == '__main__':

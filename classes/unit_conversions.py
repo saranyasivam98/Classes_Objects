@@ -117,7 +117,7 @@ def main():
 
     test_1 = UnitConversion(unit_1, unit_2, conversions)
     final_value = test_1.convert(32)
-    print(final_value)
+    LOGGER.info("The converted value is %f " % final_value)
 
 
 if __name__ == "__main__":
