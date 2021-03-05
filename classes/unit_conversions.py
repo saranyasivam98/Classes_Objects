@@ -19,37 +19,11 @@ class UnitConversion:
     To store the parameters and perform unit conversion
     """
 
-    def __init__(self, unit_1, unit_2, conversion_data):
+    def __init__(self, unit_1, unit_2, multiplier, offset):
         self.unit_1 = unit_1
         self.unit_2 = unit_2
-        self.offset = None
-        self.multiplier = None
-        self.conversion_data = conversion_data
-        self.find_params()
-
-    def find_params(self):
-        """
-        The unit conversion is in the form of a linear equation y = m*x + c, where the multiplier is m and offset is c.
-        The objective of the function is to find the multiplier and the constant for a particular conversion from
-        unit_1 to unit_2
-        :ivar self.multiplier: The multiplier in equation y=mx+c
-        :vartype self.multiplier: float
-
-        :ivar self.offset: The offset in equation y=mx+c
-        :vartype self.offset: float
-
-        :return: None
-        """
-        for conversion in self.conversion_data:
-            if conversion["from_unit"] == self.unit_1.unit and conversion["to_unit"] == self.unit_2.unit:
-                self.multiplier = conversion['multiplier']
-                self.offset = conversion['offset']
-
-        if self.unit_1.quantity != self.unit_2.quantity:
-            raise TypeError("The units must be of same quantity")
-
-        if self.multiplier is None and self.offset is None:
-            raise NameError("The conversion is not defined for the mentioned units")
+        self.offset = offset
+        self.multiplier = multiplier
 
     def is_acceptable(self, value):
         """
@@ -82,43 +56,48 @@ class UnitConversion:
                              "unit" % self.unit_1.lower_limit)
 
 
-class Units(object):
-    def __init__(self, d):
-        self.kelvin = None
-        self.millimeter = None
-        self.centimeter = None
-        self.kilometer = None
-        self.meter = None
-        self.fahrenheit = None
-        self.celsius = None
-        for a, b in d.items():
-            if isinstance(b, (list, tuple)):
-
-                setattr(self, a, [Units(x) if isinstance(x, dict) else x for x in b])
-            else:
-                setattr(self, a, Units(b) if isinstance(b, dict) else b)
-
-    def __repr__(self):
-        return str(self.__dict__)
+class Unit:
+    def __init__(self, unit, quantity, lower_limit):
+        self.unit = unit
+        self.quantity = quantity
+        self.lower_limit = lower_limit
 
 
 def main():
     """ Main Function"""
 
     with open("units.json") as file:
-        data = json.load(file)
+        units_data = json.load(file)
 
     with open("conv.json") as file:
         conversions = json.load(file)
 
-    units = Units(data)
-    unit_1 = units.kelvin
-    unit_2 = units.millimeter
+    for data in units_data:
+        globals()[data["name"]] = Unit(data["unit"], data["quantity"], data["lower_limit"])
 
-    test_1 = UnitConversion(unit_1, unit_2, conversions)
-    final_value = test_1.convert(32)
-    LOGGER.info("The converted value is %f " % final_value)
+    unit_1 = globals()['celsius']
+    unit_2 = globals()['fahrenheit']
+
+    multiplier = None
+    offset = None
+
+    print(unit_1.unit)
+    print(unit_2.unit)
+    for conversion in conversions:
+        if conversion["from_unit"] == unit_1.unit and conversion["to_unit"] == unit_2.unit:
+            multiplier = conversion['multiplier']
+            offset = conversion['offset']
+    if unit_1.quantity != unit_2.quantity:
+        raise TypeError("The units must be of same quantity")
+
+    if multiplier is None and offset is None:
+        raise NameError("The conversion is not defined for the mentioned units")
+
+    test_1 = UnitConversion(unit_1, unit_2, multiplier, offset)
+    final_value = test_1.convert(0)
+    print("The converted value is %f " % final_value)
 
 
 if __name__ == "__main__":
     main()
+
