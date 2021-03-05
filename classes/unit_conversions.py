@@ -17,6 +17,17 @@ LOGGER_CONFIG_PATH = 'config/logging.json'
 class UnitConversion:
     """
     To store the parameters and perform unit conversion
+    :ivar unit_1: The first unit in unit conversion
+    :vartype unit_1: Unit
+
+    :ivar unit_2: The second unit in unit conversion
+    :vartype unit_2: Unit
+
+    :ivar multiplier: The value of 'm' in the unit conversion equation y = m*x + c
+    :vartype multiplier: float
+
+    :ivar offset: The value of 'c' in the unit conversion equation y = m*x + c
+    :vartype offset: float
     """
 
     def __init__(self, unit_1, unit_2, multiplier, offset):
@@ -28,8 +39,8 @@ class UnitConversion:
     def is_acceptable(self, value):
         """
         To find if the input value is greater then the lower limit assigned for each unit
-        :ivar value: Input value from the user
-        :vartype value: float
+        :param value: Input value from the user
+        :type value: float
         :return: If the input value is greater than the lower limit
         :rtype: bool
         """
@@ -57,6 +68,18 @@ class UnitConversion:
 
 
 class Unit:
+    """
+    A class to store units
+
+    :ivar unit: Short name of the units that is widely used
+    :vartype unit: str
+
+    :ivar quantity: The physical quantity to which the unit belongs
+    :vartype quantity: str
+
+    :ivar lower_limit: The least value the unit can take
+    :vartype lower_limit: float
+    """
     def __init__(self, unit, quantity, lower_limit):
         self.unit = unit
         self.quantity = quantity
@@ -72,17 +95,16 @@ def main():
     with open("conv.json") as file:
         conversions = json.load(file)
 
+    units = {}
     for data in units_data:
-        globals()[data["name"]] = Unit(data["unit"], data["quantity"], data["lower_limit"])
+        units[data["name"]] = Unit(data["unit"], data["quantity"], data["lower_limit"])
 
-    unit_1 = globals()['celsius']
-    unit_2 = globals()['fahrenheit']
+    unit_1 = units['celsius']
+    unit_2 = units['fahrenheit']
 
     multiplier = None
     offset = None
 
-    print(unit_1.unit)
-    print(unit_2.unit)
     for conversion in conversions:
         if conversion["from_unit"] == unit_1.unit and conversion["to_unit"] == unit_2.unit:
             multiplier = conversion['multiplier']
