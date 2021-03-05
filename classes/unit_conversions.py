@@ -6,7 +6,6 @@ conversion
 
 import logging
 import logging.config
-import json
 
 __author__ = 'saranya@gyandata.com'
 
@@ -60,7 +59,8 @@ class UnitConversion:
             if self.unit_2 == self.unit_1:
                 return value
             else:
-                return self.multiplier * value + self.offset
+                final_value = self.multiplier * value + self.offset
+                return final_value
 
         else:
             raise ValueError("The entered value is lesser the lower limit: %d allowed for the "
@@ -80,46 +80,8 @@ class Unit:
     :ivar lower_limit: The least value the unit can take
     :vartype lower_limit: float
     """
+
     def __init__(self, unit, quantity, lower_limit):
         self.unit = unit
         self.quantity = quantity
         self.lower_limit = lower_limit
-
-
-def main():
-    """ Main Function"""
-
-    with open("units.json") as file:
-        units_data = json.load(file)
-
-    with open("conv.json") as file:
-        conversions = json.load(file)
-
-    units = {}
-    for data in units_data:
-        units[data["name"]] = Unit(data["unit"], data["quantity"], data["lower_limit"])
-
-    unit_1 = units['celsius']
-    unit_2 = units['fahrenheit']
-
-    multiplier = None
-    offset = None
-
-    for conversion in conversions:
-        if conversion["from_unit"] == unit_1.unit and conversion["to_unit"] == unit_2.unit:
-            multiplier = conversion['multiplier']
-            offset = conversion['offset']
-    if unit_1.quantity != unit_2.quantity:
-        raise TypeError("The units must be of same quantity")
-
-    if multiplier is None and offset is None:
-        raise NameError("The conversion is not defined for the mentioned units")
-
-    test_1 = UnitConversion(unit_1, unit_2, multiplier, offset)
-    final_value = test_1.convert(0)
-    print("The converted value is %f " % final_value)
-
-
-if __name__ == "__main__":
-    main()
-

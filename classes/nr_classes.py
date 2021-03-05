@@ -8,8 +8,6 @@ the information of the class
 
 import logging
 import logging.config
-import argparse
-import json
 
 __author__ = 'saranya@gyandata.com'
 
@@ -19,19 +17,15 @@ LOGGER_CONFIG_PATH = 'config/logging.json'
 
 class NewtonRaphson:
     """
-    Class Description: To implement newton raphson method to find the roots of polynomial
+    To implement newton raphson method to find the roots of polynomial
+    :ivar poly: Coefficients of the polynomial
+    :vartype poly: list
+
+    :ivar x: Initial value of the root
+    :vartype x: float
     """
     def __init__(self, poly, x):     # initial value of x
-        """ Constructor
-         :ivar poly: Coefficients of the polynomial
-         :vartype poly: list
-
-         :ivar x: Initial value of the root
-         :vartype x: float
-
-         :ivar
-
-         """
+        """ Constructor """
         self.poly = poly
         self.x = x
         self.derivative = 0
@@ -95,46 +89,5 @@ class NewtonRaphson:
         """ Prints the values like No of iteration, Root, Function value, Residual Error, Gradient Value"""
         LOGGER.info("The function, gradient values and root and residual error for each iteration are:")
         for key, value in self.save_values.items():
-            LOGGER.info("Iteration number: %f, Root: %f, Residual error: %f, Function value: %f, Derivative value: %f" % (key, value[0],value[1], value[2], value[3]))
-
-
-def arg_parse():
-    """
-    Function Description: To parse command line arguments
-
-    :return: command line arguments passed
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', nargs="+", type=float)
-    parser.add_argument('-x', help="Initial value of x", type=float)
-    parser.add_argument("-v", "--verbose", help="print extra values", default=0,
-                        action="store_true")
-    return parser.parse_args()
-
-
-def setup_logging(default_path=LOGGER_CONFIG_PATH):
-    """
-    Function Description: To setup logging using the json file
-    :param default_path: Path of the configuration file
-    :type default_path: str
-    """
-    with open(default_path, 'rt') as file:
-        config = json.load(file)
-    logging.config.dictConfig(config)
-
-
-def main():
-    """ Main function """
-    setup_logging()
-    args = arg_parse()
-    polynomial = args.p
-    x = args.x
-    obj = NewtonRaphson(polynomial, x)
-    root, flag_root = obj.find_root
-    obj.print()            # should be obj.print()
-
-    LOGGER.info(obj.save_values)
-
-
-if __name__ == "__main__":
-    main()
+            LOGGER.info("Iteration number: %f, Root: %f, Residual error: %f, Function value: %f, Derivative value: %f",
+                        key, value[0], value[1], value[2], value[3])
